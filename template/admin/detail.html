@@ -13,6 +13,11 @@
                     작성일 : {{ shop.dateFormat( shop.createdAt ) }}
                 </div>
 
+                {% if shop.thumbnail %}
+                    <img src="/uploads/{{ shop.thumbnail }}" style="max-width: 100%;" alt="">
+                {% endif %}
+                <br />
+                
                 주소 : {{ shop.address }} / {{ shop.location }}
                 <br />
                 전화 : {{ shop.phone }}
