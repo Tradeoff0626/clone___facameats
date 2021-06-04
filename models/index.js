@@ -15,7 +15,8 @@ process.env.DB_USER, process.env.DB_PASSWORD,{
         max: 5,
         min: 0,
         idle: 10000
-    }
+    },
+    //logging : false          //로그 출력 여부 (Default: true)
 });
 
 let db = [];
