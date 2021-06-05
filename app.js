@@ -2,6 +2,7 @@ const express = require('express');
 const nunjucks = require('nunjucks');
 const logger = require('morgan');
 const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');  //npm install cookie-parser.
 
 // db 관련
 const db = require('./models');
@@ -62,7 +63,7 @@ class App {
         this.app.use(logger('dev'));
         this.app.use(bodyParser.json());
         this.app.use(bodyParser.urlencoded({ extended: false }));
-
+        this.app.use(cookieParser());                                //CSRF 활용 용도
     }
 
     setViewEngine (){

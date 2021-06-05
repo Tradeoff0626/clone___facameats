@@ -3,6 +3,11 @@
 
 {% block content -%}
     <form action="" method="post" enctype="multipart/form-data">    <!-- 썸네일 업로드용 enctype 추가 -->
+    
+        <!-- 화면에 보이지 않게(hidden 속성) CSRF 토큰 값 받음. name의 '_csrf'는 고정값.-->
+        <!-- csrfToken은 템플릿에서 보내준 임의의 토큰값. 토큰값이 없으면 저장시 오류(ForbiddenError: invalid csrf token) 발생-->
+        <input type="hidden" name="_csrf" value="{{ csrfToken }}" />
+
         <table class="table table-bordered">
             <tr>
               <th>이름</th>

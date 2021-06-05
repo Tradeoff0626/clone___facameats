@@ -14,8 +14,8 @@ exports.get_shops = async ( _ , res ) => {
 
 }
 
-exports.get_shops_write = ( _ , res ) => {
-  res.render( 'admin/form.html' );
+exports.get_shops_write = ( req , res ) => {
+  res.render( 'admin/form.html', { csrfToken : req.csrfToken() } );     //입력 화면 렌더링 시, 임의 토큰 값 생성 후 적용
 }
 
 exports.post_shops_write = async (req,res) => {
@@ -60,7 +60,7 @@ exports.get_shops_edit = async(req, res) => {
     try{
 
         const shop = await models.Shops.findByPk(req.params.id);
-        res.render('admin/form.html', { shop });  
+        res.render('admin/form.html', { shop, csrfToken : req.csrfToken() });  //수정 화면 렌더링 시, 임의 토큰 값 생성 후 추가 적용
 
     }catch(e){
         console.log(e);
