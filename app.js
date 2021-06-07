@@ -4,6 +4,12 @@ const logger = require('morgan');
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');  //npm install cookie-parser.
 
+const flash = require('connect-flash');         //npm install connect-flash. flash 메시지 출력용
+
+//passport 관련
+const passport = require('passport');           //npm install passport.
+const session = require('express-session');     //npm install express-session.
+
 // db 관련
 const db = require('./models');
 
@@ -18,6 +24,9 @@ class App {
         
         // 뷰엔진 셋팅
         this.setViewEngine();
+
+        //세션 설정
+        this.setSession();
 
         // 미들웨어 셋팅
         this.setMiddleWare();
@@ -72,6 +81,29 @@ class App {
             autoescape: true,
             express: this.app
         });
+
+    }
+
+
+    setSession (){
+
+        //session 관련 셋팅
+			this.app.use(session({
+				secret: 'tradeoff',         //시크릿 코드. 임의의 값 입력 -> 세션 암호화 처리
+				resave: false,              //항상 재저장 할지 여부
+				saveUninitialized: true,    //초기화하지 않고 저장할지 여부
+				cookie: {                   //쿠키 설정
+					maxAge: 2000 * 60 * 60  //지속시간 2시간
+				},
+                //store : xxx               //세션 데이터 저장 방식. 생략 시 Memort store (파일 저장등 서버 재시작시 reset)
+			}));
+
+			//passport 적용
+			this.app.use(passport.initialize());
+			this.app.use(passport.session());
+
+			//플래시 메시지 관련
+			this.app.use(flash());
 
     }
 
