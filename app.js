@@ -117,7 +117,8 @@ class App {
 
         // 템플릿 변수
         this.app.use( (req, res, next) => {
-            this.app.locals.isLogin = true;
+            this.app.locals.isLogin = req.isAuthenticated;      //로그인 상태 여부('isAuthenticated'는 passport에서 지원)
+            this.app.locals.currentUser = req.user;             //로그인된 사용자 정보
             this.app.locals.req_path = req.path;
             next();
         });

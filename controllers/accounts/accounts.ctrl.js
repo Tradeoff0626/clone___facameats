@@ -26,8 +26,8 @@ exports.get_login = ( req , res ) => {
 }
 
 exports.post_login = ( _ , res) => {
-    res.send('<script>alert("로그인 성공"); \
-    location.href="/accounts/success";</script>');
+    res.send('<script> \
+    location.href="/";</script>');                  /* '/accounts/success' => '/' */
 }
 
 exports.get_success = ( req , res ) => {

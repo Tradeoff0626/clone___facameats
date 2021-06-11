@@ -4,10 +4,14 @@ const ctrl = require('./admin.ctrl');
 
 //middleware 추가 설정
 const upload = require('../../middleware/multer');          //파일업로드(multer)
-const csrfProtection = require('../../middleware/csrf');    //CSRF 
+const csrfProtection = require('../../middleware/csrf');    //CSRF
+
+const loginRequired = require('../../middleware/loginRequired');    //로그인 체크 미들웨어
 
 
 router.get('/shops', ctrl.get_shops );
+
+//router.use(loginRequired);         //아래의 모든 router에 로그인 체크 확인. (특정 라우터의 파라미터에 로그인 체크를 넣어도 무관 )
 
 router.get('/shops/write', csrfProtection, ctrl.get_shops_write );      //상점 정보 입력 화면에 CSRF 미들웨어 적용.(보내는 쪽)
 

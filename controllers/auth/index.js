@@ -13,7 +13,7 @@ router.get('/facebook', passport.authenticate('facebook', {scope : 'email'}));
 router.get('/facebook/callback',
     passport.authenticate('facebook',
         {
-            successRedirect : '/auth/facebook/success',
+            successRedirect : '/',                      //'/auth/facebook/success',
             failureRedirect : '/auth/facebook/fail'
         }
     )
