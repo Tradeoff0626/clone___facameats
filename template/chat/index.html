@@ -51,6 +51,8 @@
 <script>
 var socket = io();
 
+
+//추가 start >>
 function updateUserList(userList){
     $('#userList').html("");
     for(var key in userList){
@@ -58,15 +60,16 @@ function updateUserList(userList){
     }
 }
 
-socket.on('join', function(data){
+socket.on('join', function(data){       //사용자 목록에서 추가 (socketConnection.js에서 'join' emit())
     updateUserList(data);
 });
 
-socket.on('leave', function(data){
+socket.on('leave', function(data){      //사용자 목록에서 제거 (socketConnection.js에서 'leave' emit())
     updateUserList(data);
 });
+// >>  추가 end
 
-
+//수정 start >>
 socket.on('server message', function(data){
     $('#chatBody').append('<li>'+ 
       '<strong>'+ 
@@ -75,6 +78,7 @@ socket.on('server message', function(data){
         data.message + 
       '</li>');
 });
+// >> 수정 end
 
 $(document).ready(function() {
     $('#sendForm').submit(function(){

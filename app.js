@@ -93,7 +93,7 @@ class App {
 
         //session 관련 셋팅
 			//this.app.use(session({
-            this.app.sessionMiddleware = session({      //socket.io의 미들웨어에 적용하기 위해 변수로 따로 설정
+            this.app.sessionMiddleWare = session({      //socket.io의 미들웨어에 적용하기 위해 변수로 따로 설정
 				secret: 'tradeoff',         //시크릿 코드. 임의의 값 입력 -> 세션 암호화 처리
 				resave: false,              //항상 재저장 할지 여부
 				saveUninitialized: true,    //초기화하지 않고 저장할지 여부
@@ -108,7 +108,7 @@ class App {
             });
 
             //변수로 설정한 세션 정보를 미들웨어로 적용
-            this.app.use(this.app.sessionMiddleware);
+            this.app.use(this.app.sessionMiddleWare);
 
 			//passport 적용
 			this.app.use(passport.initialize());
