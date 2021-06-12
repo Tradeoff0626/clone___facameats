@@ -10,6 +10,11 @@ const server = app.listen( port, function(){
 const listen = require('socket.io');
 const io = listen(server);
 
+//socket io passport 접근하기 위한 미들웨어 적용
+io.use( (socket, next) => {
+    app.sessionMiddleWare(socket.request, socket.request.res, next);        //app.js에서 변수로 따로 분리하여 적용 처리
+});
+
 const socketConnection = require('./helpers/socketConnection');
 socketConnection(io);
 //require('./helpers/socketConnection')(io);   //한 줄로 줄임 가능

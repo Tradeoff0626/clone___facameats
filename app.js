@@ -87,8 +87,13 @@ class App {
 
     setSession (){
 
+        //npm i --legacy-peer-deps connect-session-sequelize   
+        //npm7에서 의존성 검사가 엄격하므로 npm6로 검사(npx -p npm@6 npm install ~)하거나 위 옵션을 설정하여 설치  
+        const SequelizeStore = require('connect-session-sequelize')(session.Store);
+
         //session 관련 셋팅
-			this.app.use(session({
+			//this.app.use(session({
+            this.app.sessionMiddleware = session({      //socket.io의 미들웨어에 적용하기 위해 변수로 따로 설정
 				secret: 'tradeoff',         //시크릿 코드. 임의의 값 입력 -> 세션 암호화 처리
 				resave: false,              //항상 재저장 할지 여부
 				saveUninitialized: true,    //초기화하지 않고 저장할지 여부
@@ -96,7 +101,14 @@ class App {
 					maxAge: 2000 * 60 * 60  //지속시간 2시간
 				},
                 //store : xxx               //세션 데이터 저장 방식. 생략 시 Memort store (파일 저장등 서버 재시작시 reset)
-			}));
+                store : new SequelizeStore({            //session 테이블 생성(DB 세션 사용)
+                    db: db.sequelize
+                })
+			//}));
+            });
+
+            //변수로 설정한 세션 정보를 미들웨어로 적용
+            this.app.use(this.app.sessionMiddleware);
 
 			//passport 적용
 			this.app.use(passport.initialize());

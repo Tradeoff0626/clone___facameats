@@ -1,0 +1,56 @@
+{% set title = "채팅" %}
+{% extends "layout/base.html" %}
+ 
+{% block content -%}
+
+    <div class="panel panel-default" id="chatWrap">
+        <div class="panel-heading">대화내용</div>
+        <div class="panel-body">
+            <ul id="chatBody"></ul>
+        </div>
+    </div>
+
+    <form action="" method="post" id="sendForm">
+
+        <div class="input-group">
+            <input type="hidden" name="socketId">
+            <input type="text" name="message" class="form-control" placeholder="대화내용을 입력해주세요.">
+            <span class="input-group-btn">
+                <button class="btn btn-primary">작성하기</button>
+            </span>
+        </div><!-- /input-group -->
+
+    </form>  
+
+
+
+<style type="text/css">
+.panel-default ul { padding-left:0px; }
+.panel-default ul li { list-style:none; padding-left:0px;}
+.panel-default .panel-body {min-height:350px; max-height:350px;  overflow-y:scroll; }
+#chatWrap ul li strong::after { content: " : "; }
+@media (max-width: 768px) { 
+    #userWrap { display:none; }
+    #chatWrap .panel-body { min-height:250px; }
+}
+</style>
+<script src="/socket.io/socket.io.js"></script>  
+<script>
+var socket = io();      //socket.io 로딩... localhost인 경우 파라미터 생략. 
+                        //다른 서버의 socket.io를 가져올 경우... io('https://~')로 설정 필요 
+
+socket.on('server message', function(data){             //server.js 에서 전달하는 내용 수신. 임의의 ID 'server message' 내용 수신
+    $('#chatBody').append('<li>' + data + '</li>');     //채팅 내용 출력
+});
+
+$(document).ready(function() {
+    $('#sendForm').submit(function(){
+        var message = $('#sendForm input[name=message]');
+        socket.emit('client message', { message : message.val()});  //'client message'는 임의의 송신 ID. 수신 할때 해당 ID로 내용 전달 받으면됨.
+                                                                    //첫번재 message는 전달할 key명.  두번째 message는 바로 위 선언 message 변수.
+        message.val('');
+        return false;               //false로 리턴하면 post 전달하지 않음(post로 전달되어 버리면 채팅화면을 벗어나게됨)
+    });
+});
+</script>
+{% endblock %}
