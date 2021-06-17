@@ -112,44 +112,57 @@
 <!-- cart -->
 <a class="btn-cart" >
   <i class="fa fa-shopping-cart" aria-hidden="true"></i>
-  <i class="cart-item-counter">0</i>
+  <i class="cart-item-counter">{{ cartLength }}</i>
 </a>
 
 <script>
 
-  $('.getCart').click(function(e){
+    $('.btn-cart').click(function() {
+        var cartCounter = parseInt($('.cart-item-counter').text());
 
-    //링크 이동 방지. [e.preventDefault() => 해당 이벤트의 'e'의 모든 이벤트 처리 막음]
-    e.preventDefault();
-
-    if(confirm('장바구니에 담겠습니까?')){
-
-       //장바구니에 담길 ID,사진,이름을 받는다
-        var shop_id = {{ shop.id }};
-        var menu_id = $(this).attr('menu_id');  //attribute 값을 가져옴
-        var name = $(this).attr('name');
-        var price = $(this).attr('price');
- 
-        var cartList = {};          //카트리스트 변수 초기화
-
-        if( getCookie('cartList') ){                //이전에 저장된 카트 쿠키 값이 있으면...
-            //쿠키에서 검색후 있으면 json 파싱함. (쿠키에 문자열 형태로 저장하므로 다시 json으로 파싱 필요)
-            cartList = JSON.parse(getCookie('cartList'));
+        if(!cartCounter){
+            alert('장바구니에 담긴 메뉴가 없습니다.');
+        } else {
+            location.href = '/cart';
         }
-        
-        cartList[menu_id] = { 
-          shop_id,
-          menu_id,
-          name,
-          price
-        };
+    });
 
-        //쿠키는 문자열 형식으로 저장되므로, string 형식 저장을 하기위해 stringfy로 저장
-        setCookieHour( "cartList" , JSON.stringify(cartList) , 3 );     //3시간 보관
-        alert("장바구니에 담았습니다.");
-        
-    }
-  });   
+    $('.getCart').click(function(e){
+
+        //링크 이동 방지. [e.preventDefault() => 해당 이벤트의 'e'의 모든 이벤트 처리 막음]
+        e.preventDefault();
+
+        if(confirm('장바구니에 담겠습니까?')){
+
+            //장바구니에 담길 ID,사진,이름을 받는다
+            var shop_id = {{ shop.id }};
+            var menu_id = $(this).attr('menu_id');  //attribute 값을 가져옴
+            var name = $(this).attr('name');
+            var price = $(this).attr('price');
+
+            var cartList = {};          //카트리스트 변수 초기화
+
+            if( getCookie('cartList') ){                //이전에 저장된 카트 쿠키 값이 있으면...
+                //쿠키에서 검색후 있으면 json 파싱함. (쿠키에 문자열 형태로 저장하므로 다시 json으로 파싱 필요)
+                cartList = JSON.parse(getCookie('cartList'));
+            }
+            
+            cartList[menu_id] = { 
+                shop_id,
+                menu_id,
+                name,
+                price
+            };
+
+            //쿠키는 문자열 형식으로 저장되므로, string 형식 저장을 하기위해 stringfy로 저장
+            setCookieHour( "cartList" , JSON.stringify(cartList) , 3 );     //3시간 보관
+
+            $('.cart-item-counter').text(Object.keys(cartList).length);    //카트에 담긴 메뉴 갯수 갱신
+
+            alert("장바구니에 담았습니다.");
+            
+        }
+    });   
 
 </script>
 {% endblock %}
