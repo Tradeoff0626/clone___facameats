@@ -35,4 +35,30 @@
         <a href="/checkout" class="btn btn-primary">결제하기</a>
     </div>
 </main>
+<script>
+$(document).ready(function(){
+
+    $('.deleteCart').click(function(event){
+        event.preventDefault();                 //href의 링크로 넘어가게 하지 않는다.
+        if(confirm('삭제하시겠습니까?')){
+            var menu_id = parseInt($(this).attr('menu_id'));    //메뉴 아이디를 받아온다
+            
+            //menu_id로 찾아서 delete로 날린다
+            var cartList = {};
+            if( getCookie('cartList') ){ //쿠키에 'cartList'가 있으면 JSON 파싱을 한다.
+                cartList = JSON.parse(getCookie('cartList'));
+                delete cartList[menu_id];  //받아온 메뉴 아이디로 쿠키에서 지움
+            }
+
+            //쿠키 재설정
+            setCookieHour( "cartList" , JSON.stringify(cartList) , 3 );
+
+            //완료 후 다시 cart 페이지로 이동(refresh)
+            document.location.href = "/cart";
+        }
+
+    });
+
+});
+</script>
 {% endblock %}
