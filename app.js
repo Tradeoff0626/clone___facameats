@@ -54,7 +54,7 @@ class App {
         db.sequelize.authenticate()
         .then(() => {
             console.log('Connection has been established successfully.');
-            //return db.sequelize.sync();
+            return db.sequelize.sync();
             //return db.sequelize.drop();       //sequelize 재적용 시 삭제 후 재생성. (데이터 제거됨. 새 필드 추가시 migration으로 해야함.)
         })
         .then(() => {
