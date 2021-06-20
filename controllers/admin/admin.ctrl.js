@@ -151,3 +151,24 @@ exports.remove_menu = async(req, res) => {
     }
 }
 
+exports.get_order = async( _ , res ) => {
+    const checkouts = await models.Checkout.findAll();
+    res.render('admin/order.html', { checkouts });
+}
+  
+
+exports.get_order_edit = async(req,res) => {
+    try{
+  
+        const checkout = await models.Checkout.findOne({
+            where : {
+                id : req.params.id
+            },
+            include : [ 'Menu' , 'Shop' ]       //메뉴들을 가져오지만 메뉴 리스트나 가격이 결제 시점과 다른 경우가 있으므로
+        });                                     //결제 시점에서 따로 저장하고 여기서 조회하는 기능 추가 구현 필요
+        res.render( 'admin/order_edit.html' , { checkout });
+  
+    }catch(e){
+        console.log(e);
+    }
+  }
