@@ -1,0 +1,18 @@
+const path = require('path');
+
+module.exports = {
+  'config': path.resolve('config', 'config.js'),            //DB접속 설정 파일 경로
+  'seeders-path': path.resolve('config', 'seeders'),        //임시 데이터 경로
+  'models-path': path.resolve('models') ,                   //모델 정의 파일 경로
+  'migrations-path': path.resolve('config', 'migrations')   //마이그레이션 실행 경로
+};
+
+
+//Sequelize Migration
+//models가 기존에 존재하는 경우 디렉토리명을 변경(models.old)... 후에 'npx sequelize-cli init' 실행
+//위의 설정대로 설치되며, 설치 후 cofing 디렉토리 생성됨
+//'config.js'는 기존에 사용하던 .env 파일을 참조하도록 수정
+//새로 생성된 'models' 디렉토리 삭제 후 기존에 만들어둔 'models' 디렉토리명 복구 (models.old -> models)
+
+//'npx sequelize-cli db:migrate' 실행 시 마이그레이션 실행됨.(default> development)
+//'npx sequelize-cli db:migrate --env [test or production]' ->> config.js에 분리된 DB 환경 별로 실행 가능
