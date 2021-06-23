@@ -132,6 +132,16 @@ class App {
             this.app.locals.isLogin = req.isAuthenticated;      //로그인 상태 여부('isAuthenticated'는 passport에서 지원)
             this.app.locals.currentUser = req.user;             //로그인된 사용자 정보
             this.app.locals.req_path = req.path;
+
+            //카카오 지도 API 키 ('.env'에서 설정값 참조)
+            this.app.locals.map_api = {
+                KAKAO_JAVASCRIPT_KEY : process.env.KAKAO_JAVASCRIPT_KEY,
+                default :{                                      //default 위치
+                    lat : process.env.DEFAULT_LATITUDE ,        //위도  
+                    lng : process.env.DEFAULT_LONGITUDE         //경도
+                }
+            }
+
             next();
         });
 

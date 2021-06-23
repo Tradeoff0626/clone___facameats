@@ -22,7 +22,8 @@ module.exports = {
 //'npx sequelize-cli migration:generate --name shops-add-geo' ->> 마이그레이션 추가 명령어 실행 
 // -> config/migration에 '날짜-shops-add-geo.js' 추가됨(추가<up> 및 제거<down>할 내용 정의)
 //'npx sequelize-cli db:migrate'          -> <up>으로 정의한 부분 마이그레이션 실행 (SequelizeMeta 테이블에 스택으로 쌓임)
-//'npx sequelize-cli db:migrate:undo'     -> <down> 부분으로 실행 되돌리기 (SequelizeMeta 테이블을 참조. 스택으로 undo)
+//(= 'npx sequelize-cli db:migrate up')
 
+//'npx sequelize-cli db:migrate:undo'     -> <down> 부분으로 실행 되돌리기 (SequelizeMeta 테이블을 참조. 스택으로 undo)
 
 //'npx sequelize-cli migration:generate --name checkout-change-paid_amount'  ->> 필드 변경 예제
