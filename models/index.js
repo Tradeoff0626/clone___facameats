@@ -37,6 +37,16 @@ Object.keys(db).forEach(modelName => {
     }
 });
 
+//지도 좌표 저장 시 sequelize에서 point 타입으로 저장할 때 자동 호출되는 함수(ST_GeomFromText)에 대한 처리
+const Wkt = require('terraformer-wkt-parser')
+Sequelize.GEOMETRY.prototype._stringify = function _stringify(value, options) {
+  return 'ST_GeomFromText(' + options.escape(Wkt.convert(value)) + ')'
+}
+Sequelize.GEOGRAPHY.prototype._stringify = function _stringify(value, options) {
+  return 'ST_GeomFromText(' + options.escape(Wkt.convert(value)) + ')'
+}
+
+
 db.sequelize = sequelize;
 db.Sequelize = Sequelize;
 

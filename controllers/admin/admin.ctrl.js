@@ -21,6 +21,16 @@ exports.get_shops_write = ( req , res ) => {
 exports.post_shops_write = async (req,res) => {
 
     try{
+
+        //지도 위치 좌표(경도,위도)
+        req.body.geo = {
+            type        : 'Point',
+            coordinates : [
+                req.body.geo.split(',')[0],
+                req.body.geo.split(',')[1]
+            ]
+        }
+
         //console.log(req.file);
         req.body.thumbnail = (req.file) ? req.file.filename : '';       //입력할 썸네일이 없다면 빈 경로를 설정.
 		await models.Shops.create(req.body);
