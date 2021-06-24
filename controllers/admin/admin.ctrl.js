@@ -87,6 +87,15 @@ exports.post_shops_edit = async(req, res) => {
 
     try{
 
+        //지도 위치 좌표(경도,위도)
+        req.body.geo = {
+            type        : 'Point',
+            coordinates : [
+                req.body.geo.split(',')[0],
+                req.body.geo.split(',')[1]
+            ]
+        }
+
         const shop = await models.Shops.findByPk(req.params.id);
 
         if(req.file && shop.thumbnail) {            //썸네일. 변경하려는 파일과 기존 파일이 있는 경우
