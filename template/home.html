@@ -167,6 +167,42 @@ mapContainer.setCenter(new kakao.maps.LatLng(
   {{ map_api.default.lng }}
 ));
 
+
+//내 위치를 기본 위치로...
+// geolocation 함수를 사용가능한지 체크(https 에서 사용 가능. 'ngrok'을 사용하면 domain 및 https 부여되므로 테스트 가능)
+// ngrok에 생성된 임시 url도 카카오 개발자 사이트의 앱에 등록 필요
+if(navigator.geolocation){
+
+  //현재 위치를 가져와서 경도/위도를 재설정 < getCurrentPosition(success, failure, [option]) >
+  navigator.geolocation.getCurrentPosition(function(position){  //success...
+
+    var lat = position.coords.latitude;
+    var lng = position.coords.longitude;
+
+    mapContainer.setCenter(new kakao.maps.LatLng(
+      lat,
+      lng
+    ));
+    
+  }, function(err){         //failure(error)...
+    if(err.code==1){
+      alert('위치 정보를 허용해주세요.')
+    }else if(err.code==2){
+      alert('사용할수 없는 위치 입니다.')
+    }
+  } , { timeout : 3000 });  //option
+
+
+}else{
+  alert('지도 관련 api 를 불러올수 없습니다');
+}
+
+$(document).ready(function(){
+  $('#orderByNear').click(function(){
+    location.href = `/?lat=${window._userGeo.lat}&lng=${window._userGeo.lng}`;
+  });
+});
+
 </script>
 
 {% endblock %}
