@@ -6,8 +6,16 @@ exports.get_shops_detail = async (req, res) => {
 
         const shop = await models.Shops.findOne({
             where : { id : req.params.id },
-            include : [ 'Menu' ]
+            include : [ 'Menu', 'LikeUser' ]        //메뉴 및 좋아요 사용자 정보 포함
         });
+
+        let active = false;                         //로그인 사용자가 해당 상점에 좋아요 체크했는지 여부 변수 등록 및 기본값 설정
+        if(req.isAuthenticated()){                  //로그인 여부 체크
+          const user = await models.User.findByPk(req.user.id);
+          active = await shop.hasLikeUser(user);
+        }
+
+        const countLike = await shop.countLikeUser();   //해당 상점의 좋아요 갯수
 
         let cartList = {};
         let cartLength = 0;                 //장바구니에 담긴 메뉴의 개수
@@ -24,7 +32,7 @@ exports.get_shops_detail = async (req, res) => {
             }
         }
     
-        res.render('shops/detail.html', {shop, cartLength, sameShops});
+        res.render('shops/detail.html', {shop, countLike, active, cartLength, sameShops});
             
     } catch (e) {
         console.log(e);
@@ -41,8 +49,6 @@ exports.post_shops_like = async (req, res) => {
   
         const status = await user.addLikes(shop);   // (=) shop.addLikeUser(user);
 
-        console.log(status);
-        
         res.json({
             status              //이전에 좋아요 상태(값)에 따른 처리를 하기 위해서...
         })
