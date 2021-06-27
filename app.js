@@ -132,6 +132,7 @@ class App {
             this.app.locals.isLogin = req.isAuthenticated;      //로그인 상태 여부('isAuthenticated'는 passport에서 지원)
             this.app.locals.currentUser = req.user;             //로그인된 사용자 정보
             this.app.locals.req_path = req.path;
+            this.app.locals.req_query = req.query;              //홈화면 거리순 정렬을 위해 설정 
 
             //카카오 지도 API 키 ('.env'에서 설정값 참조)
             this.app.locals.map_api = {

@@ -42,7 +42,9 @@
       </section>
       <section class="row restaurant">
         <div class="col-xs-7 col-xs-offset-5">
-          <button type="button" class="btn btn-link btn-sort active">
+          <button id="orderByNear" class="btn btn-link btn-sort
+            {% if req_query.lat and req_query.lng %} active {% endif %}
+          "> <!-- 거리 순 정렬일 경우 아이콘 활성화-->
             <i class="fa fa-map" aria-hidden="true"></i>
             <i class="fa fa-arrows-h" aria-hidden="true"></i>
             <span>거리순</span>
@@ -55,42 +57,17 @@
         <div class="col-xs-12">
           <h2 class="a11y-hidden">식당 리스트</h2>
           <ul class="row restaurant-list">
+            {% for shop in shops %}
             <li class="col-xs-6">
-              <a href="">
+              <a href="/shops/{{ shop.id }}">
                 <div class="thumb">
-                  <img src="/static/images/thumb.jpg" alt="">
+                  <img src="/uploads/{{ shop.thumbnail }}" alt="">
                 </div>
-                <h3 class="name sub-title2">패캠식당</h3>
-                <p class="address body2">미왕빌딩 15층</p>
+                <h3 class="name sub-title2">{{ shop.name }}</h3>
+                <p class="address body2">{{ shop.address }}</p>
               </a>
             </li>
-            <li class="col-xs-6">
-              <a href="">
-                <div class="thumb">
-                  <img src="/static/images/thumb.jpg" alt="">
-                </div>
-                <h3 class="name sub-title2">패캠식당</h3>
-                <p class="address body2">미왕빌딩 15층</p>
-              </a>
-            </li>
-            <li class="col-xs-6">
-              <a href="">
-                <div class="thumb">
-                  <img src="/static/images/thumb.jpg" alt="">
-                </div>
-                <h3 class="name sub-title2">패캠식당</h3>
-                <p class="address body2">미왕빌딩 15층</p>
-              </a>
-            </li>
-            <li class="col-xs-6">
-              <a href="">
-                <div class="thumb">
-                  <img src="/static/images/thumb.jpg" alt="">
-                </div>
-                <h3 class="name sub-title2">패캠식당</h3>
-                <p class="address body2">미왕빌딩 15층</p>
-              </a>
-            </li>
+          {% endfor %}
           </ul>
         </div>
       </section>
@@ -102,6 +79,11 @@
 
 var shops = {{ shops | dump | safe }};
 var positions = {};
+
+window._userGeo = {
+  lat : {{ map_api.default.lat }} ,
+  lng : {{ map_api.default.lng }}
+};
 
 //조회된 상점의 위치 정보 리스트
 for(var key in shops){
@@ -120,8 +102,8 @@ var mapContainer = new kakao.maps.Map(
     document.getElementById("map_area"),
     {
         center: new kakao.maps.LatLng( 
-          {{ map_api.default.lat }} ,     //전역 변수(.env에 설정된 기본값) - 좌표 위치
-          {{ map_api.default.lng }} 
+          window._userGeo.lat ,           // 기본 좌표 위치(기본 설정 값 도는 현재 위치)
+          window._userGeo.lng 
         ),                                // 지도의 중심좌표
         level: 7                          // 지도의 확대 레벨
     }
@@ -176,12 +158,12 @@ if(navigator.geolocation){
   //현재 위치를 가져와서 경도/위도를 재설정 < getCurrentPosition(success, failure, [option]) >
   navigator.geolocation.getCurrentPosition(function(position){  //success...
 
-    var lat = position.coords.latitude;
-    var lng = position.coords.longitude;
+    window._userGeo.lat     = position.coords.latitude;
+    window._userGeo.lat.lng = position.coords.longitude;
 
     mapContainer.setCenter(new kakao.maps.LatLng(
-      lat,
-      lng
+      window._userGeo.lat,          //window._userGeo['lat']
+      window._userGeo.lng
     ));
     
   }, function(err){         //failure(error)...
@@ -197,11 +179,13 @@ if(navigator.geolocation){
   alert('지도 관련 api 를 불러올수 없습니다');
 }
 
+
+//거리순 버튼을 눌렀을 때...경도 및 위도를 request로 요청 처리
 $(document).ready(function(){
   $('#orderByNear').click(function(){
     location.href = `/?lat=${window._userGeo.lat}&lng=${window._userGeo.lng}`;
   });
-});
+})
 
 </script>
 
