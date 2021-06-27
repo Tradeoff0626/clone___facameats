@@ -30,6 +30,22 @@ module.exports = function(sequelize, DataTypes){
       }
   );
 
+  //ManyToMany
+  User.associate = (models) => {
+    
+    // 즐겨찾기(좋아요) 구현
+    User.belongsToMany(models.Shops,{
+        through: {
+            model: 'LikesShops',
+            unique: false
+        },
+        as: 'Likes',
+        foreignKey: 'user_id',
+        sourceKey: 'id',
+        constraints: false
+    });
+  };
+
   //Sequelize Hooks.<https://sequelize.org/master/manual/hooks.html>  [Create(DB 입력) 전 처리. password 암호화]
   User.beforeCreate(( user, _ ) => {
       user.password = passwordHash(user.password);
