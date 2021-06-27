@@ -34,11 +34,14 @@ exports.get_shops_detail = async (req, res) => {
 
 
 exports.post_shops_like = async (req, res) => {
+
     try {
         const shop = await models.Shops.findByPk(req.params.shop_id);
         const user = await models.User.findByPk(req.user.id);
   
         const status = await user.addLikes(shop);   // (=) shop.addLikeUser(user);
+
+        console.log(status);
         
         res.json({
             status              //이전에 좋아요 상태(값)에 따른 처리를 하기 위해서...
@@ -50,16 +53,17 @@ exports.post_shops_like = async (req, res) => {
 
   
   exports.delete_shops_like = async (req, res) => {
+
     try {
-      const shop = await models.Shops.findByPk(req.params.shop_id);
-      const user = await models.User.findByPk(req.user.id);
-  
-      await user.removeLikes(shop);     // (=) shop.removeLikeUser(user);
-      
-      res.json({
-            message : "success"
-        });
-    } catch (e) {
+        const shop = await models.Shops.findByPk(req.params.shop_id);
+        const user = await models.User.findByPk(req.user.id);
+    
+        await user.removeLikes(shop);     // (=) shop.removeLikeUser(user);
         
+        res.json({
+                message : "success"
+            });
+    } catch (e) {
+        console.log(e);
     }
   };
