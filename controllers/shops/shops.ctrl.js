@@ -30,4 +30,36 @@ exports.get_shops_detail = async (req, res) => {
         console.log(e);
     }
     
-}
+};
+
+
+exports.post_shops_like = async (req, res) => {
+    try {
+        const shop = await models.Shops.findByPk(req.params.shop_id);
+        const user = await models.User.findByPk(req.user.id);
+  
+        const status = await user.addLikes(shop);   // (=) shop.addLikeUser(user);
+        
+        res.json({
+            status              //이전에 좋아요 상태(값)에 따른 처리를 하기 위해서...
+        })
+    } catch (e) {
+        console.log(e);
+    }
+  };
+
+  
+  exports.delete_shops_like = async (req, res) => {
+    try {
+      const shop = await models.Shops.findByPk(req.params.shop_id);
+      const user = await models.User.findByPk(req.user.id);
+  
+      await user.removeLikes(shop);     // (=) shop.removeLikeUser(user);
+      
+      res.json({
+            message : "success"
+        });
+    } catch (e) {
+        
+    }
+  };
