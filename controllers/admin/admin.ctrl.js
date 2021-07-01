@@ -1,15 +1,27 @@
 const models = require('../../models');
 
-exports.get_shops = async ( _ , res ) => {
+exports.get_shops = async ( req , res ) => {
+
+    const paginate = require('express-paginate'); 
 
     try{
 
-        const shops = await models.Shops.findAll();
+        const [ shops, totalCount ] = await Promise.all([
+            await models.Shops.findAll({
+                limit   : req.query.limit,          //paginate.middleware()의 첫번재 인자. 한 페이지에 표시될 갯수. limit. (여기서는 '2')
+                offset  : req.offset,               //오프셋
+                order   : [ ['createdAt', 'desc'] ] //정렬
+            }), 
+            await models.Shops.count()              //게시물 총 갯수
+        ]);
 
-        res.render( 'admin/shops.html' , { shops });
+        const pageCount = Math.ceil( totalCount / req.query.limit );
+		const pages = paginate.getArrayPages(req)( 5 , pageCount, req.query.page);  //첫번째 인자는 페이지네이션에 보여질 페이지 수 (5면 << 6 7 8 9 10 >>)
+			
+		res.render( 'admin/shops.html' , { shops , pages , pageCount });
 
     }catch(e){
-
+        console.log(e);
     }
 
 }

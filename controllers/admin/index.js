@@ -2,14 +2,16 @@ const { Router } = require('express');
 const router = Router();
 const ctrl = require('./admin.ctrl');
 
+const paginate = require('express-paginate'); 
+
 //middleware 추가 설정
 const upload = require('../../middleware/multer');          //파일업로드(multer)
 const csrfProtection = require('../../middleware/csrf');    //CSRF
 
 const loginRequired = require('../../middleware/loginRequired');    //로그인 체크 미들웨어
 
-
-router.get('/shops', ctrl.get_shops );
+//페이지네이션 적용 (한 페이지 표시 갯수<limit>, URL 파라미터에 limit을 직접 입력하여 조회할 때 한 페이지 표시 갯수 맥시멈 강제 제한)
+router.get('/shops', paginate.middleware(2, 50), ctrl.get_shops );  
 
 //router.use(loginRequired);         //아래의 모든 router에 로그인 체크 확인. (특정 라우터의 파라미터에 로그인 체크를 넣어도 무관 )
 
