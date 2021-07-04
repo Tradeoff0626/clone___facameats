@@ -88,6 +88,7 @@ $(document).ready(function(){
     
        var IMP = window.IMP;
        //IMP.init('가맹점식별코드삽입');            //아임포트 - 시스템설정 - 내정보 - [가맹점 식별코드 값]
+
        //아임호트 사이트에서 받아온다( http://www.iamport.kr/ )
 
        IMP.request_pay({
@@ -101,11 +102,14 @@ $(document).ready(function(){
            buyer_tel : buyer_tel,
            buyer_addr : buyer_addr,
            buyer_postcode : buyer_postcode,
-           m_redirect_url : 'http://localhost:3000/checkout/complete'
+           //GET방식으로 처리하기 위해 url에 query 추가
+           m_redirect_url : `http://localhost:3000/checkout/complete?menuArray=${menuArray}&shop_id=${shop_id}`
+           //m_redirect_url : `[ngrok으로 생성된 url]/checkout/complete?menuArray=${menuArray}&shop_id=${shop_id}` 
 
        }, function(rsp){
            if ( rsp.success ) {
-        
+               
+               /*
                //요청 성공후 ajax POST요청한다.
                $.ajax({
                    url: '/checkout/complete',
@@ -135,6 +139,10 @@ $(document).ready(function(){
                }).fail( function(error){
                    console.log(error);
                });
+               */
+
+                //위의 iamport 정보를 보여주지 않기 위해 get 방식으로 변경함.
+                document.location.href = `/checkout/complete?menuArray=${menuArray}&shop_id=${shop_id}?imp_uid=${rsp.imp_uid}`;
 
            } else {
                let msg = '결제에 실패하였습니다.';
