@@ -46,6 +46,18 @@ module.exports = (sequelize, DataTypes) => {
             constraints: false
         });
 
+        // 태그 구현 [Tag와 ManyToMany]
+        Shops.belongsToMany( models.Tag ,{
+            through: {
+                model: 'TagShop',
+                unique: false
+            },
+            as : 'Tag', 
+            foreignKey: 'shop_id',
+            sourceKey: 'id',
+            constraints: false
+        });
+
     };
 
     Shops.prototype.dateFormat = (date) => (

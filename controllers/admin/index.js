@@ -38,4 +38,9 @@ router.get('/shops/delete/:shop_id/:menu_id', ctrl.remove_menu );
 router.get('/order', ctrl.get_order);
 router.get('/order/edit/:id', ctrl.get_order_edit);
 
+//태그
+router.post('/tag', ctrl.write_tag);
+router.delete('/tag/:shop_id/:tag_id', ctrl.delete_tag);
+
+
 module.exports = router;

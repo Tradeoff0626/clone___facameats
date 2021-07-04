@@ -81,7 +81,17 @@ exports.get_shops_edit = async(req, res) => {
 
     try{
 
-        const shop = await models.Shops.findByPk(req.params.id);
+        //태그 정보도 조회되도록 변경
+        //const shop = await models.Shops.findByPk(req.params.id);
+        const shop = await models.Shops.findOne({
+            where : { id : req.params.id},
+            include : [ 
+                { model : models.Tag, as : 'Tag' }
+            ],
+            order: [        //태그 정렬
+                [ 'Tag', 'createdAt', 'desc' ]
+            ]
+        });
         res.render('admin/form.html', { shop, csrfToken : req.csrfToken() });  //수정 화면 렌더링 시, 임의 토큰 값 생성 후 추가 적용
 
     }catch(e){
@@ -203,3 +213,40 @@ exports.get_order_edit = async(req,res) => {
         console.log(e);
     }
   }
+
+
+  exports.write_tag = async (req, res) => {
+    try {
+        const tag = await models.Tag.findOrCreate({
+            where: {
+                name : req.body.name
+            }
+        });
+
+        const shop = await models.Shops.findByPk(req.body.shop_id);
+        const status = await shop.addTag(tag[0]);
+
+        res.json({
+            status : status,
+            tag : tag[0]
+        })
+
+    } catch (e) {
+        res.json(e)
+    }
+}
+
+exports.delete_tag = async (req, res) => {
+    try {
+        const shop = await models.Shops.findByPk(req.params.shop_id);
+        const tag = await models.Tag.findByPk(req.params.tag_id);
+
+        const result = await shop.removeTag(tag);
+        
+        res.json({
+            result : result
+        });
+    } catch (e) {
+        console.log(e);
+    }
+}

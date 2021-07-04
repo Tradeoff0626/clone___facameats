@@ -6,7 +6,7 @@ exports.get_shops_detail = async (req, res) => {
 
         const shop = await models.Shops.findOne({
             where : { id : req.params.id },
-            include : [ 'Menu', 'LikeUser' ]        //메뉴 및 좋아요 사용자 정보 포함
+            include : [ 'Menu', 'LikeUser', 'Tag' ]        //메뉴 및 좋아요 사용자 정보, 태그 포함
         });
 
         let active = false;                         //로그인 사용자가 해당 상점에 좋아요 체크했는지 여부 변수 등록 및 기본값 설정
